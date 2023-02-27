@@ -1,24 +1,26 @@
-import React, { useEffect, useState } from 'react'
+
 import { ActiveNow } from '../ActiveNowPage/ActiveNow'
-import { Profile } from '../auth/profile'
-import { Chat } from '../chat/chat'
 import { useAuth } from '../FunctionForPost/userFunctionContext'
+import { Header } from '../Header/Header'
 import { Post } from '../Header/post'
 import { SideBar } from '../sideBar/sideBar'
 import './homePage.css'
 
 export const HomePage = () => {
-  const {profileImgUrl,allUserPost,postImgUrl,userNames} = useAuth();
-  const [newfeedPosts,setNewfeedPost] = useState([]);
+  const {profileImgUrl,allUserPost,userNames} = useAuth();
+
   const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
 
   
   return (
+    <>
+    <Header/>
     <div className='homePageContainer'>
       <ActiveNow/>
-        <div className='warp overflow-auto w-50 shadow bg-dark pb-5'>
+        <div className='warp overflow-auto w-50 shadow bg-dark pb-5 '>
 
-          <Post/>
+            <Post/>
+  
             {allUserPost.map((ite)=>{
               
               return ite.post.map((it)=>{
@@ -53,5 +55,6 @@ export const HomePage = () => {
         </div>
         <SideBar/>
     </div>
+  </>
   )
 }

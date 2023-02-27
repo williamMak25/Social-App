@@ -16,12 +16,13 @@
 }
 .headerContainer{
     position: fixed;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     width: 100%;
 
 }
 .headerWarp{
     height: 50px;
+    position: relative;
 }
 .profileImage{
     width: 40px ;

@@ -14,17 +14,17 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { PrivateRoute } from './components/utils/privateRoute';
 import { Chat } from './components/chat/chat';
+import { FriendProfile } from './components/ActiveNowPage/friendProfile';
 
 function App() {
   return (
   <UserContext>
-      <Header/>
-    
   <Routes>
     <Route element={<PrivateRoute/>}>
       <Route path='/' element={<HomePage/>}/>
       <Route path='/chat' element={<Chat/>}/>
       <Route path='/profile' element={<Profile/>}/>
+      <Route path='/friend/:user' element={<FriendProfile/>}/>
     </Route>
       <Route path='/signup' element={<SignupPage/>}/>
       <Route path='/login' element={<LoginPage/>}/>

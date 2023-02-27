@@ -4,6 +4,7 @@ import { get, set,ref as database_ref, onValue } from 'firebase/database';
 import React, { useContext, useState ,useEffect} from 'react'
 import { auth, db, postRef, realDataB, storage } from '../../firebase/firebase';
 import uuid from 'react-uuid';
+import { async } from '@firebase/util';
 
 // creating context 
 
@@ -21,18 +22,20 @@ const [currentUser,setCurrentUser] = useState([]);
 const [userTextPosts,setUserTextPosts] = useState([]);
 const [allUserPost,setAllUserPost] = useState([]);
 const [oneUserName,setOneUserName] = useState('');
-const [friends,setFriends] = useState([]);
+const [friends,setFriends] = useState();
 const [profileImgUrl,setProfileImgUrl] = useState('');
 const [profileImgName,setProfileImgName] = useState('')
+const [Loading,setLoading] = useState(true);
+const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
 console.log(profileImgUrl)
 
 
 // checking user log in or not ]
 
 useEffect(()=>{
-  onAuthStateChanged(auth, (user)=>{ 
+  onAuthStateChanged(auth, async(user)=>{ 
       if(user){
-          setCurrentUser(user) // set user email to show on UI
+          setCurrentUser(user)// set user email to show on UI
     
           const profileRef = database_ref(realDataB,`profile/${user.uid}`);
           const postRef = database_ref(realDataB,`post/${user.uid}`);
@@ -40,7 +43,7 @@ useEffect(()=>{
 
   //.........retrieving current log in user name from data base...................//
 
-          get(profileRef).then((snapshot)=>{
+        await get(profileRef).then((snapshot)=>{
               let user = [];
               snapshot.forEach((ite)=>{
                 user.push(ite.val())
@@ -50,7 +53,8 @@ useEffect(()=>{
   //........retrieving data(all usernames) from firebase and adding into new array for display in UI...//
 
           const getProfileNames = database_ref(realDataB,'profile/')
-            get(getProfileNames).then((snapshot)=>{
+
+          await get(getProfileNames).then((snapshot)=>{
             let userNameArray = []
             snapshot.forEach((item)=>{
               userNameArray.push({
@@ -60,16 +64,15 @@ useEffect(()=>{
             })
              setUserNames(userNameArray); // set username for UI
               console.log(userNameArray)
-              let activeUser = []
-             const tempusers = userNameArray.find( (item) => item.id !== currentUser.uid);
-             activeUser.push(tempusers)
-             console.log(tempusers)
-             setFriends(activeUser);
+
+             const tempusers = userNameArray.filter( (item) => item.id !== user.uid);
+
+             setFriends(tempusers);
             })
 
-  //.......retrieving data(one user post) form firebase and add into new array for display in UI...//
+  //.......retrieving data(one user post or log in user post) form firebase and add into new array for display in UI...//
 
-            get(postRef).then((snapshot)=>{
+          await get(postRef).then((snapshot)=>{
               let userPostArray = []
               snapshot.forEach((data)=>{
                 userPostArray.push({
@@ -83,7 +86,7 @@ useEffect(()=>{
   //.......retrieving data(all user post) from firebase........//
 
  
-            get(allpostRef).then((posts)=>{
+        await get(allpostRef).then((posts)=>{
               let allpostArray = [];
               posts.forEach((data)=>{
                 
@@ -184,7 +187,8 @@ const signup = (email,password,userName) =>{
     allUserPost, // tesxt-post of all user
     postImgUrl,
     oneUserName,
-    friends
+    friends,
+    initialPhoto
   }
 
   return (

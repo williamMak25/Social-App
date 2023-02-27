@@ -58,6 +58,10 @@ export const SideBar = () => {
           <button className='btn btn-dark border m-2'
                   onClick={()=> navigate('/profile')}>View Profile</button>
       </div>
+      <hr className=''/>
+      {currentUser ? <button
+                className='btn btn-white text-white border'
+                onClick={()=>signOut(auth)}>Log Out</button>: null}
     </div>
   )
 }

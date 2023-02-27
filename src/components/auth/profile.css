@@ -11,4 +11,5 @@
   /* set the desired height and width of the container */
   height: 100vh;
   width: 100%;
+  padding: 20px;
 }

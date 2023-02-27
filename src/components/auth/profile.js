@@ -1,6 +1,7 @@
 import { signOut } from 'firebase/auth'
 import { get, ref } from 'firebase/database'
 import React, {useEffect, useState } from 'react'
+import { NavLink } from 'react-router-dom'
 import { auth} from '../../firebase/firebase'
 import { useAuth } from '../FunctionForPost/userFunctionContext'
 import './profile.css'
@@ -50,9 +51,10 @@ export const Profile = () => {
       </div>
 
       <div>
-        <button className='btn btn-primary w-25 m-2' onClick={handleSignOut}>Log Out</button>
-        <button className='btn btn-primary w-25'
+        <button className='btn btn-primary m-2' onClick={handleSignOut}>Log Out</button>
+        <button className='btn btn-primary m-2'
                 onClick={handleToggle}>Edit Profile</button>
+        <NavLink to='/'><button className='btn btn-primary m-2'>Home</button></NavLink>
       </div>
         
       <div className={toggleBox}>
