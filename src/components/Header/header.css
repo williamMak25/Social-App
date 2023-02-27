@@ -1,0 +1,30 @@
+
+.navBar{
+    display: flex;
+    justify-content: space-around;
+    background-color:#ffffff;
+    align-items: center;
+    padding: 10px;
+}
+.itemOne{
+    display: inline;
+    list-style: none;
+    margin: 20px;
+    margin-left:50px;
+    margin-right: 50px;
+    color: white;
+}
+.headerContainer{
+    position: fixed;
+    margin-bottom: 20px;
+    width: 100%;
+
+}
+.headerWarp{
+    height: 50px;
+}
+.profileImage{
+    width: 40px ;
+    height: 40px ;
+    border-radius: 50%;
+}
