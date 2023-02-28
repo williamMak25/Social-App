@@ -19,7 +19,7 @@ const handleSubmit = (e) => {
 }
 
   return (  
-    <div className='container my-3 bg-black rounded bg-opacity-25 p-2'>
+    <div className='container sticky-sm-top my-3 bg-dark rounded p-2'>
       <form className='d-flex flex-column rounded textArea'
        onSubmit={handleSubmit}>
         <textarea className='h-100 d-inline-block my-1'

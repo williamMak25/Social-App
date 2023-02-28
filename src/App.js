@@ -15,6 +15,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { PrivateRoute } from './components/utils/privateRoute';
 import { Chat } from './components/chat/chat';
 import { FriendProfile } from './components/ActiveNowPage/friendProfile';
+import { LoadingPage } from './components/loading/loading';
 
 function App() {
   return (

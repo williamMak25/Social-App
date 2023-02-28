@@ -4,3 +4,6 @@
 body{
   background-color: black;
 }
+.warp::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}

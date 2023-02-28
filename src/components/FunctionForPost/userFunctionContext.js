@@ -25,10 +25,8 @@ const [oneUserName,setOneUserName] = useState('');
 const [friends,setFriends] = useState();
 const [profileImgUrl,setProfileImgUrl] = useState('');
 const [profileImgName,setProfileImgName] = useState('')
-const [Loading,setLoading] = useState(true);
+const [loading,setLoading] = useState(true);
 const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
-console.log(profileImgUrl)
-
 
 // checking user log in or not ]
 
@@ -63,10 +61,8 @@ useEffect(()=>{
               })
             })
              setUserNames(userNameArray); // set username for UI
-              console.log(userNameArray)
 
              const tempusers = userNameArray.filter( (item) => item.id !== user.uid);
-
              setFriends(tempusers);
             })
 
@@ -101,21 +97,20 @@ useEffect(()=>{
               allpostArray.forEach(item => {
                 const ids = item.id;
                 const post = Object.values(item.post)
-                console.log(post)
                tempArray.push({
                 id:ids,
                 post:post
                })
               });
-              console.log(tempArray)
               setAllUserPost(tempArray)
             })
+            setLoading(false)
   //......retrieving profile picture..........//
       }else{
        setCurrentUser(null);
       }
   })
-},[])
+},[allUserPost])
 
 // user Image post store in dataBase
 
@@ -188,7 +183,8 @@ const signup = (email,password,userName) =>{
     postImgUrl,
     oneUserName,
     friends,
-    initialPhoto
+    initialPhoto,
+    loading
   }
 
   return (
