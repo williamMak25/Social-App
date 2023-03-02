@@ -35,21 +35,17 @@ export const Profile = () => {
     }
 
   return (
-  <div className='bg-dark text-white vh-100' style={{backgroundImage:`url(${background})`,
-                                                     backgroundSize:'100vh',
-                                                     backgroundRepeat:'no-repeat',
-                                                     backgroundPosition:'center'}}>
-    <div className="d-flex flex-column  justify-content-start p-5 shadow w-100 vh-100">
+  <div className='bg-dark text-white h-screen'>
+    <div className="flex flex-column justify-center items-center p-5 w-full h-screen">
       
-      <div className='d-flex flex-row mx-5 px-3'>
+      <div className='flex flex-column items-center mx-5 px-3'>
         <img src={profileImgUrl ? profileImgUrl : initialPhoto}
              alt='profilePicture'
-             style={{width: '100px',
-                    height: '100px',
-                    borderRadius: '50%'}}/>
-        <div className='d-inline m-3'>
+             className='w-28 h-28 rounded-circle'
+             />
+        <div className='m-2'>
             <h3 className='text-center'>{oneUserName}</h3>
-            <p className='opacity-50'>{currentUser.email}</p> 
+            <p className='opacity-50 text-center'>{currentUser.email}</p> 
         </div>
       </div>
 
@@ -73,12 +69,13 @@ export const Profile = () => {
         </div>
       </div>
 
-      <div className='warp overflow-auto vh-100 w-100 p-2'>
+      <div className='warp overflow-auto h-screen w-full flex flex-column items-center p-2'>
           {userTextPosts.map((post)=>{
             return (
-              <div  className='container p-2 d-flex flex-column justify-content-start align-items-start my-1 rounded bg-black bg-opacity-50' key={post.data.time}>
-                <div className='border w-100 border-dark rounded p-2'>
-                    <div className='d-flex align-items-center'>
+              <div  className='p-2 flex flex-column justify-center items-center my-1 rounded border bg-dark' key={post.data.time}>
+
+                <div className='border w-full border-dark rounded p-2'>
+                  <div className='flex items-center justify-center'>
                       
                       <img src={profileImgUrl ? profileImgUrl : initialPhoto}
                         className="img-fluid m-2"
@@ -86,24 +83,24 @@ export const Profile = () => {
                                 height: '40px',
                                 borderRadius: '50%'}}
                         alt='profileImg'/>
-                      <div>
-                        <h5 className='align-middle m-0'>{oneUserName}</h5>
+                    <div>
+                        <h5 className='text-start m-0'>{oneUserName}</h5>
                         <small className='m-0 p-0 opacity-50'>{post.data.time}</small>
-                      </div>
                     </div>
+                  </div>
 
-                    <div className='w-100 '>
+                  <div className='w-full '>
                             {/*<img src={postImgUrl}
                           className='img-fluid m-2' alt='postImg'/>*/}
                             <p className='p-2 mx-3'>{post.data.userpost}</p>
-                    </div>
+                  </div>
                         <hr className='m-1'/>
-                    <div>
-                        <button className='btn text-light'><i className="bi bi-hand-thumbs-up"></i> Like</button>
-                        <button className='btn text-light'><i className="bi bi-chat-left"></i> Comment</button>
-                    </div>
-
+                  <div>
+                      <button className='btn text-light'><i className="bi bi-hand-thumbs-up"></i> Like</button>
+                      <button className='btn text-light'><i className="bi bi-chat-left"></i> Comment</button>
+                  </div>
                 </div>
+
               </div>)
           })}
       </div>

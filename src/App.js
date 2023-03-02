@@ -3,19 +3,17 @@ import './App.css';
 import { Header } from './components/Header/Header';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { HomePage } from './components/homepage/HomePage';
 
 import { useAuth, UserContext } from './components/FunctionForPost/userFunctionContext';
 import { SignupPage } from './components/auth/signup';
 import { LoginPage } from './components/auth/login';
 import { Profile } from './components/auth/profile';
-import { auth } from './firebase/firebase';
-import { useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
 import { PrivateRoute } from './components/utils/privateRoute';
 import { Chat } from './components/chat/chat';
-import { FriendProfile } from './components/ActiveNowPage/friendProfile';
-import { LoadingPage } from './components/loading/loading';
+
+import { HomePage } from './components/DisplayPage/HomePage';
+import { FriendProfile } from './components/DisplayPage/friendProfile';
+import { ActiveNow } from './components/ActiveNowPage/ActiveNow';
 
 function App() {
   return (
@@ -25,6 +23,7 @@ function App() {
       <Route path='/' element={<HomePage/>}/>
       <Route path='/chat' element={<Chat/>}/>
       <Route path='/profile' element={<Profile/>}/>
+      <Route path='/friend' element={<ActiveNow/>}/>
       <Route path='/friend/:user' element={<FriendProfile/>}/>
     </Route>
       <Route path='/signup' element={<SignupPage/>}/>
