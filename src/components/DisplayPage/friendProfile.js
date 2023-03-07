@@ -1,17 +1,18 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../FunctionForPost/userFunctionContext';
 import { LoadingPage } from '../loading/loading';
 import background from '../profileBg.png'
 
 export const FriendProfile = () => {
     const {user} = useParams(null);
-    const {allUserPost,userNames,loading,profileImgUrl} = useAuth(); // data from context
+    const {allUserPost,userNames,chat,profileImgUrl} = useAuth(); // data from context
     const [friendData,setFriendData] = useState([])
     const [friendName,setFriendName] = useState([])
     const [isLoading, setIsLoading] = useState(true);
     const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
+    const navigating = useNavigate()
     const navigate = useNavigate()
     useEffect(() => {
         try{
@@ -27,9 +28,7 @@ export const FriendProfile = () => {
 
     }, [allUserPost, user]);
 
-    const handleBack = () => {
-        navigate('/')
-    }
+
 
 return (
     <>
@@ -45,8 +44,11 @@ return (
                 <h3 className='text-center'>{friendName?.username}</h3>
             </div>
             <div>
-                <button className='m-2 text-cyan-400 mx-2 px-2' onClick={handleBack}>Home</button>
-                <button className='m-2 text-cyan-400 mx-2 px-3'>Message</button>
+                <button className='m-2 text-cyan-400 mx-2 px-2' onClick={()=>navigate('/')}>Home</button>
+                
+                 <NavLink to={`/chatbox/${user}`}><button className='m-2 text-cyan-400 mx-2 px-3'>Message</button></NavLink>
+
+                
             </div>
         </div>
 

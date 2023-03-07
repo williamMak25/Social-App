@@ -18,7 +18,10 @@ export const Header = () => {
       <div className='min-[395px]:hidden sticky top-0 z-[1] max-[395px]:block'>
         <nav className='bg-dark border-b flex flex-row justify-between items-center pt-2 m-0 '>
           <NavLink to='/' className='ml-3 text-white no-underline font-serif'><h2>ConNet</h2></NavLink>
-          <button className='mr-3' onClick={handleBar}><h4 className="bi bi-person-lines-fill text-white "></h4></button>  
+          <div className='flex flex-row'>
+           
+            <button className='mx-3' onClick={handleBar}><h4><i className="bi bi-grid text-blue-500"></i></h4></button>
+          </div>
         </nav>
 
         <div className={displayBar}>
@@ -49,8 +52,9 @@ export const Header = () => {
               :
               friends?.map((name)=>{
                 return(
-                  <div key={name.id} className='bg-stone-700 p-2 m-2 rounded'>
-                    <NavLink to={`/friend/${name.id}`} className='no-underline text-light'>{name.username}</NavLink>
+                  <div key={name.id} className='bg-stone-700  m-2 rounded flex flex-row items-center justify-center'>
+                    <NavLink to={`/friend/${name.id}`} className='no-underline text-light m-2 font-serif text-center'><h4>{name.username}</h4></NavLink>
+                    <NavLink to={`/chatbox/${name.id}`} className='m-2'><h4><i className="bi bi-chat-dots"></i></h4></NavLink>
                   </div>)                
                   })}
             </div>

@@ -9,25 +9,27 @@ import { SignupPage } from './components/auth/signup';
 import { LoginPage } from './components/auth/login';
 import { Profile } from './components/auth/profile';
 import { PrivateRoute } from './components/utils/privateRoute';
-import { Chat } from './components/chat/chat';
+import { ChatBox } from './components/chat/chatBox';
 
 import { HomePage } from './components/DisplayPage/HomePage';
 import { FriendProfile } from './components/DisplayPage/friendProfile';
 import { ActiveNow } from './components/ActiveNowPage/ActiveNow';
+import { Chat } from './components/chat/chat';
 
 function App() {
   return (
   <UserContext>
   <Routes>
     <Route element={<PrivateRoute/>}>
-      <Route path='/' element={<HomePage/>}/>
-      <Route path='/chat' element={<Chat/>}/>
+      <Route path='/' element={<HomePage/>}/>   
       <Route path='/profile' element={<Profile/>}/>
       <Route path='/friend' element={<ActiveNow/>}/>
+      <Route path='/chatbox' element={<ChatBox/>}/>
       <Route path='/friend/:user' element={<FriendProfile/>}/>
+      <Route path='/chatbox/:chatUser' element={<Chat/>}/>
     </Route>
-      <Route path='/signup' element={<SignupPage/>}/>
-      <Route path='/login' element={<LoginPage/>}/>
+    <Route path='/signup' element={<SignupPage/>}/>
+    <Route path='/login' element={<LoginPage/>}/>
   </Routes>
     </UserContext>
   );

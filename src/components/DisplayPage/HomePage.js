@@ -6,9 +6,13 @@ import { Post } from '../Header/post'
 import { SideBar } from '../sideBar/sideBar'
 import { LoadingPage } from '../loading/loading'
 import background from '../profileBg.png'
+import { ChatBox } from '../chat/chatBox'
+import { NavLink } from 'react-router-dom'
+import { useState } from 'react'
 
 export const HomePage = () => {
   const {profileImgUrl,allUserPost,userNames,loading} = useAuth();
+  const [show,setShow] = useState(false);
 
   const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
 
@@ -16,9 +20,14 @@ export const HomePage = () => {
   return (
     <>
     <Header/>
-    <div className='overflow-auto h-screen bg-dark py-2 flex flex-row justify-around items-start max-[395px]:py-0'>
+    <div className='overflow-auto h-screen bg-dark flex flex-row justify-around items-start max-[395px]:py-0'>
         <ActiveNow/>
-        <div className='h-screen overflow-auto warp'>
+        <button className='w-14 h-14 rounded-circle bg-cyan-800 absolute left-5 bottom-5 z-10 text-lg text-white max-[395px]:hidden'>
+        {show ? <i className="bi bi-envelope-open "onClick={()=>setShow(false)}></i> :
+         <i className="bi bi-envelope" onClick={()=>setShow(true)}></i>}</button>
+        {show ? <ChatBox/> : null}
+        <div className='h-screen mt-1 overflow-auto warp w-1/2 max-[395px]:w-full'>
+          
             <Post/>
             {loading ? <LoadingPage/> :    
               allUserPost.map((ite)=>{  
@@ -61,6 +70,7 @@ export const HomePage = () => {
         <SideBar/>
 
     </div>
+
   </>
   )
 }

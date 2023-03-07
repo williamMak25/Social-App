@@ -5,13 +5,14 @@ import { useAuth } from '../FunctionForPost/userFunctionContext'
 import { LoadingPage } from '../loading/loading';
 import {SkeletonTheme}from 'react-loading-skeleton'
 import logo from './logo.png'
+import { ChatBox } from '../chat/chatBox';
 export const ActiveNow = () => {
 
   const {friends,loading} = useAuth();
 
   return (
-  <div className='pr-3 h-screen max-[395px]:hidden'>
-    <div className='min-[600px]:block shadow shadow-zinc-400 p-5'>
+  <div className='pr-3 h-screen w-1/4 max-[395px]:hidden'>
+    <div className='min-[600px]:block shadow shadow-zinc-400 p-5 h-screen'>
 
       <h2 className='text-white min-[600px]:text-center'> Friends</h2>
       <hr className='text-white'/>
@@ -26,18 +27,13 @@ export const ActiveNow = () => {
         friends?.map((name)=>{
           return(
             
-            <div key={name.id} className='bg-neutral-300 m-2 py-2 px-5 rounded'>
-              <NavLink to={`/friend/${name.id}`} className='no-underline text-black'>{name.username}</NavLink>
+            <div key={name.id} className='bg-neutral-300 m-2 py-2 px-4 rounded flex flex-row justify-between hover:bg-violet-100'>
+              <NavLink to={`/friend/${name.id}`} className='no-underline text-black mr-3'>{name.username}</NavLink>
+              <NavLink to={`/chatbox/${name.id}`} className='no-underline text-black'><i className="bi bi-chat-dots"></i></NavLink>
             </div>)
                        
        })}
-    </div>
-    <div className='text-white flex flex-column justify-center items-center opacity-50 h-64 mt-5 p-2'>
-       <img src={logo} className='w-20 h-20 mb-2 '/>
-       <h2 className='font-serif text-cyan-400'>ConNet</h2>
-       <small className='text-center'>Spend Your valuable Time With Us</small>
-    </div>
-     
+    </div>  
   </div>
   )
 }

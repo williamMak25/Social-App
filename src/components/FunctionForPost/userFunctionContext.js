@@ -4,7 +4,6 @@ import { get, set,ref as database_ref, onValue } from 'firebase/database';
 import React, { useContext, useState ,useEffect} from 'react'
 import { auth, db, postRef, realDataB, storage } from '../../firebase/firebase';
 import uuid from 'react-uuid';
-import { async } from '@firebase/util';
 
 // creating context 
 
@@ -26,8 +25,8 @@ const [friends,setFriends] = useState();
 const [profileImgUrl,setProfileImgUrl] = useState('');
 const [profileImgName,setProfileImgName] = useState('')
 const [loading,setLoading] = useState(true);
+const [allChat,setAllChat] = useState([])
 const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
-
 // checking user log in or not ]
 
 useEffect(()=>{
@@ -38,6 +37,19 @@ useEffect(()=>{
           const profileRef = database_ref(realDataB,`profile/${user.uid}`);
           const postRef = database_ref(realDataB,`post/${user.uid}`);
           const allpostRef = database_ref(realDataB,'post/');
+          const chatRef = database_ref(realDataB,'chat/')
+
+  //.......retrieving all chats from database......//
+        get(chatRef).then((snapshot)=>{
+          let temp = [];
+          snapshot.forEach((chat)=>{
+            temp.push({
+              id:chat.key,
+              chat: chat.val()
+            })
+          })
+          setAllChat(temp)
+        })
 
   //.........retrieving current log in user name from data base...................//
 
@@ -141,7 +153,7 @@ const postTextStore = (postText) =>{
    const post1Ref = database_ref(realDataB,`post/${currentUser.uid}/${uuid()}`);
 
   set(post1Ref ,{
-      time:Date(),
+      time:new Date(new Date().getTime() + 4*60*60*1000).toLocaleTimeString(),
       userpost:postText,
   })
 }
@@ -168,6 +180,17 @@ const signup = (email,password,userName) =>{
     console.log(error.message)
   })
 }
+//.........ChatBox function(set and retrieving message to database)......./
+const messaging = async(message,chatUserId)=>{
+  const userMessageRef = database_ref(realDataB,`chat/${currentUser.uid}/${chatUserId}/messages${uuid()}`);
+  await set(userMessageRef,{
+    userSms:message,
+    time:new Date().toString(),
+    id:currentUser.uid
+  })
+}
+
+
 // context Values
   const value = {
     fileStore,
@@ -184,7 +207,9 @@ const signup = (email,password,userName) =>{
     oneUserName,
     friends,
     initialPhoto,
-    loading
+    loading,
+    messaging,
+    allChat
   }
 
   return (
