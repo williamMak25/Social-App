@@ -16,7 +16,7 @@ export const SideBar = () => {
 
 
   return (
-    <div class="flex flex-column shadow shadow-zinc-300 text-white p-5 m-2 mt-2 w-1/4 h-screen max-[395px]:hidden">
+    <div class="flex flex-column bg-zinc-900 shadow shadow-zinc-300 text-white p-5 m-2 mt-2 w-1/4 h-screen max-[395px]:hidden">
       <div className='flex flex-column justify-center items-center'>
         <img src={profileImgUrl ? profileImgUrl : initialPhoto}
              alt='profilePicture'

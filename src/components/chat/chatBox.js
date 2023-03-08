@@ -23,17 +23,18 @@ export const ChatBox = () => {
  },[allChat])
   return (
     <>
-    <div className='mw-100 absolute bottom-20 left-10 z-10 p-2 bg-cyan-800 rounded max-[395px]:hidden'>
-      <h4 className='text-white dotted ml-1'>Chat History</h4>
+    <div className='absolute left-10 bottom-10 w-76 overflow-auto z-10 p-2 bg-zinc-900 h-1/2 rounded shadow'>
+      <h4 className='text-cyan-400 bg-dark p-2 rounded my-0 dotted text-center w-full mb-2'>Chat History</h4>
        {singleChat && singleChat?.map((item)=>{
         return(
-        <div className='flex flex-row bg-white rounded'>
-                <img src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png'
-                      className='w-10 h-10 rounded-circle'/>
-                <div className='ml-2'>
-                  <small>{userNames?.find( name => name.id === item.id).username}</small>
-                  <NavLink to={`/chatbox/${item.id}`}><button className='m-2 text-cyan-400 mx-2 px-3'>Message</button></NavLink>
+        <div className='justify-between rounded text-white py-2 flex flex-row bg-dark'>
+                
+                <div className='ml-2 flex flex-row items-center mx-2'>
+                  <img src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png'
+                      className='w-10 h-10 rounded-circle mr-2'/>
+                      <small>{userNames?.find( name => name.id === item.id).username}</small>
                 </div>
+                <NavLink to={`/chatbox/${item.id}`}><button className='m-2 text-cyan-400 mx-2 px-3'>Message</button></NavLink>
         </div>)
        })}
     </div>

@@ -22,10 +22,11 @@ export const HomePage = () => {
     <Header/>
     <div className='overflow-auto h-screen bg-dark flex flex-row justify-around items-start max-[395px]:py-0'>
         <ActiveNow/>
-        <button className='w-14 h-14 rounded-circle bg-cyan-800 absolute left-5 bottom-5 z-10 text-lg text-white max-[395px]:hidden'>
+        <button className='w-14 h-14 rounded-circle bg-cyan-800 absolute left-5 bottom-5 z-20 text-lg text-white max-[395px]:absolute '>
         {show ? <i className="bi bi-envelope-open "onClick={()=>setShow(false)}></i> :
          <i className="bi bi-envelope" onClick={()=>setShow(true)}></i>}</button>
-        {show ? <ChatBox/> : null}
+        {show ? <ChatBox/>: null}
+
         <div className='h-screen mt-1 overflow-auto warp w-1/2 max-[395px]:w-full'>
           
             <Post/>

@@ -23,7 +23,7 @@ const handleSubmit = (e) => {
 }
 
   return (  
-    <div className='min-[395px]:sticky top-0 flex flex-column justify-center bg-dark rounded max-[390px]:m-0 rounded pb-1 bg-dark static'>
+    <div className='z-10 min-[395px]:sticky top-0 flex flex-column justify-center bg-dark rounded max-[390px]:m-0 rounded pb-1 bg-dark static'>
       <form className='flex flex-column items-start justify-center m-1 max-[395px]:p-1 '
        onSubmit={handleSubmit}>
         <textarea className='w-full outline-none p-2 max-[395px]:w-full rounded outline-none'

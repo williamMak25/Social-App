@@ -34,30 +34,28 @@ return (
     <>
  {isLoading ? <LoadingPage/> :
     <div className='bg-dark text-white h-screen'>
-    <div className="flex flex-column justify-center items-center p-5 w-full h-screen ">
+    <div className="flex flex-column justify-center items-center w-full h-screen max-[395px]:p-0 p-3">
 
-        <div className='flex flex-column items-center mx-5 px-3 py-2'>
+        <div className='min-[395px]:flex flex-column items-center mx-5 px-3 max-[395px]:flex flex-row m-0 p-0'>
             <img src={profileImgUrl ? profileImgUrl : initialPhoto}
                  alt='profilePicture'
-                 className='w-28 h-28 rounded-circle'/>
+                 className='max-[395px]:w-16 h-16 rounded-circle'/>
             <div className='m-2'>
                 <h3 className='text-center'>{friendName?.username}</h3>
             </div>
-            <div>
-                <button className='m-2 text-cyan-400 mx-2 px-2' onClick={()=>navigate('/')}>Home</button>
-                
-                 <NavLink to={`/chatbox/${user}`}><button className='m-2 text-cyan-400 mx-2 px-3'>Message</button></NavLink>
-
-                
+            <div className='mx-1 px-1 mb-3'>
+                <button className='text-blue-400 mx-3' onClick={()=>navigate('/')}>Home</button>
+                 <NavLink to={`/chatbox/${user}`}><button className='text-blue-400 mx-3'>Message</button></NavLink>     
             </div>
         </div>
 
-        <div className='warp overflow-auto h-screen w-full flex flex-column items-center p-2'>
+        <div className='warp overflow-auto h-screen w-full flex flex-column items-center'>
          {isLoading ? <LoadingPage/> : friendData?.post.map((data)=>{
             return (
-              <div  className='p-2 flex flex-column justify-center items-center w-96 my-1 rounded border bg-dark' key={data.time}>
-                <div className='border w-full border-dark rounded p-2'>
-                    <div className='flex items-start'>
+              <div  className='min-[395px]: flex flex-column justify-start items-center my-1 rounded border bg-dark
+                                max-[395px]:p-0 w-80' key={data.time}>
+                <div className='border-dark rounded w-full'>
+                    <div className='flex items-center justify-start'>
                       
                       <img src={profileImgUrl ? profileImgUrl : initialPhoto}
                         className="img-fluid m-2"

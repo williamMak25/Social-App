@@ -27,7 +27,7 @@ export const ActiveNow = () => {
         friends?.map((name)=>{
           return(
             
-            <div key={name.id} className='bg-neutral-300 m-2 py-2 px-4 rounded flex flex-row justify-between hover:bg-violet-100'>
+            <div key={name.id} className='bg-zinc-400 m-2 py-2 px-4 rounded flex flex-row justify-between hover:bg-violet-100'>
               <NavLink to={`/friend/${name.id}`} className='no-underline text-black mr-3'>{name.username}</NavLink>
               <NavLink to={`/chatbox/${name.id}`} className='no-underline text-black'><i className="bi bi-chat-dots"></i></NavLink>
             </div>)

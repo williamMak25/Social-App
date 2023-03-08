@@ -16,7 +16,7 @@ export const Header = () => {
 
   return (
       <div className='min-[395px]:hidden sticky top-0 z-[1] max-[395px]:block'>
-        <nav className='bg-dark border-b flex flex-row justify-between items-center pt-2 m-0 '>
+        <nav className='bg-dark h-20 border-b flex flex-row justify-between items-center pt-2 m-0 '>
           <NavLink to='/' className='ml-3 text-white no-underline font-serif'><h2>ConNet</h2></NavLink>
           <div className='flex flex-row'>
            

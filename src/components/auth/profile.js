@@ -89,7 +89,7 @@ export const Profile = () => {
               <div  className='min-[395px]: flex flex-column justify-start items-center my-1 rounded border bg-dark
                                 max-[395px]:p-0 w-80' key={post.data.time}>
 
-                <div className=' border-dark rounded w-full'>
+                <div className='border-dark rounded w-full'>
                   <div className='flex items-center justify-start'>
                       
                       <img src={profileImgUrl ? profileImgUrl : initialPhoto}
