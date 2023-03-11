@@ -5,23 +5,20 @@ import { useNavigate } from 'react-router-dom'
 import { auth} from '../../firebase/firebase'
 import { useAuth } from '../FunctionForPost/userFunctionContext'
 import logo from '../ActiveNowPage/logo.png'
+import { LoadingPage } from '../loading/loading'
 export const SideBar = () => {
-    const {currentUser,oneUserName,ProfilePictureStore,profileImgUrl,userTextPosts} = useAuth();
-    const [toggleBox,setToggleBox] = useState('hidden')
-    const [profilePicture,setProfilePicture] = useState();
+    const {currentUser,userNames,profileImgUrl,loading} = useAuth();
     const navigate = useNavigate()
     const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
 
-    
-
-
-  return (
-    <div class="flex flex-column bg-zinc-900 shadow shadow-zinc-300 text-white p-5 m-2 mt-2 w-1/4 h-screen max-[395px]:hidden">
+    return (
+      <>
+   {!loading ? <div class="flex flex-column bg-zinc-900 shadow shadow-zinc-300 text-white p-5 m-2 mt-2 w-1/4 h-screen max-[395px]:hidden">
       <div className='flex flex-column justify-center items-center'>
         <img src={profileImgUrl ? profileImgUrl : initialPhoto}
              alt='profilePicture'
              className='w-28 h-28 rounded-circle shadow shadow-zinc-300'/>
-        <h4 className='mt-3 text-center text-cyan-400'> {oneUserName}</h4>
+        <h4 className='mt-3 text-center text-cyan-400'>{userNames?.find(name => name.id === currentUser.uid).username}</h4>
       </div><hr className=''width="100%"/>
 
       <div className='flex flex-column item-center'>
@@ -39,6 +36,7 @@ export const SideBar = () => {
        <h2 className='font-serif text-cyan-400'>ConNet</h2>
        <small className='text-center'>Spend Your valuable Time With Us</small>
     </div>
-    </div>
+    </div>: <LoadingPage/>}
+    </>
   )
 }

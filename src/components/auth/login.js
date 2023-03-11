@@ -17,19 +17,19 @@ export const LoginPage = () => {
   return (
     <>
     <form onSubmit={handleSubmit}
-          className='d-flex flex-column justify-content-center align-items-center mx-5 my-5 w-auto '>
+          className='flex flex-column justify-center items-center mx-5 my-5 w-auto'>
       <h2>Log In In Your Accout</h2><br/>
       <div>
         <label>Email</label>
         <input type='email'
-               className='d-block'
+               className='block border outline-none p-1 rounded'
                value={email}
                onChange={(e)=>setEmail(e.target.value)} />
       </div><br/>
       <div>
         <label>Password</label>
         <input type='password'
-               className='d-block'
+               className='block border outline-none p-1 rounded'
                value={password}
                onChange={e=>setPassword(e.target.value)}/>
       </div><br/>

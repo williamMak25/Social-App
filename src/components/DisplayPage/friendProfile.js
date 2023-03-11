@@ -7,12 +7,11 @@ import background from '../profileBg.png'
 
 export const FriendProfile = () => {
     const {user} = useParams(null);
-    const {allUserPost,userNames,chat,profileImgUrl} = useAuth(); // data from context
+    const {allUserPost,userNames,profileImgUrl} = useAuth(); // data from context
     const [friendData,setFriendData] = useState([])
     const [friendName,setFriendName] = useState([])
     const [isLoading, setIsLoading] = useState(true);
     const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
-    const navigating = useNavigate()
     const navigate = useNavigate()
     useEffect(() => {
         try{

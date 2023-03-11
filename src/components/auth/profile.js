@@ -5,18 +5,16 @@ import { auth} from '../../firebase/firebase'
 import { useAuth } from '../FunctionForPost/userFunctionContext'
 import background from '../profileBg.png'
 export const Profile = () => {
-    const {currentUser,oneUserName,ProfilePictureStore,profileImgUrl,userTextPosts} = useAuth();
+    const {currentUser,userNames,ProfilePictureStore,profileImgUrl,userTextPosts} = useAuth();
     const [toggleBox,setToggleBox] = useState('hidden')
     const [profilePicture,setProfilePicture] = useState()
     const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
     
-   // 
 
     // for log out user account
 
     const handleSignOut = ()=>{
         signOut(auth);
-        localStorage.setItem(`profileImg/`)
     }
     // adding profile-picture 
 
@@ -44,7 +42,7 @@ export const Profile = () => {
              className='max-[395px]:w-16 h-16 rounded-circle'
              />
         <div className='m-1'>
-            <h3 className='text-center'>{oneUserName}</h3>
+            <h3 className='text-center'>{userNames?.find(name => name.id === currentUser.uid).username}</h3>
             <p className='opacity-50 text-center'>{currentUser.email}</p> 
         </div>
       </div>
@@ -99,7 +97,7 @@ export const Profile = () => {
                                 borderRadius: '50%'}}
                         alt='profileImg'/>
                     <div>
-                        <h5 className='text-start m-0'>{oneUserName}</h5>
+                        <h5 className='text-start m-0'>{userNames?.find(name => name.id === currentUser.uid).username}</h5>
                         <small className='m-0 p-0 text-sm opacity-50'>{post.data.time}</small>
                     </div>
                   </div>

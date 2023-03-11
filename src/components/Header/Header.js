@@ -1,10 +1,9 @@
-
+import { signOut } from 'firebase/auth'
 import React from 'react'
-import { useState } from 'react'
-import { NavLink } from 'react-router-dom'
-import { ActiveNow } from '../ActiveNowPage/ActiveNow'
+import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { auth } from '../../firebase/firebase';
 import { useAuth } from '../FunctionForPost/userFunctionContext'
-import { NavigateBar } from './navigatebar'
 
 export const Header = () => {
   const [displayBar,setDisplayBar] = useState('hidden');
@@ -52,11 +51,14 @@ export const Header = () => {
               :
               friends?.map((name)=>{
                 return(
-                  <div key={name.id} className='bg-stone-700  m-2 rounded flex flex-row items-center justify-center'>
+                  <div key={name.id} className='bg-stone-700  m-2 rounded flex flex-row items-center justify-between'>
                     <NavLink to={`/friend/${name.id}`} className='no-underline text-light m-2 font-serif text-center'><h4>{name.username}</h4></NavLink>
                     <NavLink to={`/chatbox/${name.id}`} className='m-2'><h4><i className="bi bi-chat-dots"></i></h4></NavLink>
                   </div>)                
                   })}
+                <div className='flex justify-center items-center mt-5 mb-0'>
+                  <button onClick={()=>signOut(auth)} className='text-rose-400 text-lg'>Log Out</button>
+                </div>
             </div>
             <h1 className='text-white text-body-tertiary text-center mb-0 mt-20 font-serif'>ConNet</h1>
             <small className='text-white block text-center'>Spend Your Valuable Time with us</small>

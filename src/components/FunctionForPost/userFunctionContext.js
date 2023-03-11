@@ -15,17 +15,16 @@ export const useAuth = () =>{
 export const UserContext = ({children}) => {
 
 const [postImgUrl,setPostImgUrl] = useState();
-const [uid,setUid] = useState('');
-const [userNames,setUserNames] = useState([]);
-const [currentUser,setCurrentUser] = useState([]);
-const [userTextPosts,setUserTextPosts] = useState([]);
-const [allUserPost,setAllUserPost] = useState([]);
-const [oneUserName,setOneUserName] = useState('');
-const [friends,setFriends] = useState();
+const [userNames,setUserNames] = useState([]);// registered all user name
+const [currentUser,setCurrentUser] = useState([]);// current login user(authentication)
+const [userTextPosts,setUserTextPosts] = useState([]);// one user(current user or you) text post
+const [allUserPost,setAllUserPost] = useState([]);// all user who use these app text post
+const [friends,setFriends] = useState();// username except you
 const [profileImgUrl,setProfileImgUrl] = useState('');
 const [profileImgName,setProfileImgName] = useState('')
-const [loading,setLoading] = useState(true);
-const [allChat,setAllChat] = useState([])
+const [loading,setLoading] = useState(true); // loading state data is arrive or not from database
+const [allChat,setAllChat] = useState([]);// all user chat 
+const [comments,setComments] = useState()// all user comment
 const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
 // checking user log in or not ]
 
@@ -37,7 +36,8 @@ useEffect(()=>{
           const profileRef = database_ref(realDataB,`profile/${user.uid}`);
           const postRef = database_ref(realDataB,`post/${user.uid}`);
           const allpostRef = database_ref(realDataB,'post/');
-          const chatRef = database_ref(realDataB,'chat/')
+          const chatRef = database_ref(realDataB,'chat/');
+          const commentRef = database_ref(realDataB,'comment/')
 
   //.......retrieving all chats from database......//
         get(chatRef).then((snapshot)=>{
@@ -50,16 +50,6 @@ useEffect(()=>{
           })
           setAllChat(temp)
         })
-
-  //.........retrieving current log in user name from data base...................//
-
-        await get(profileRef).then((snapshot)=>{
-              let user = [];
-              snapshot.forEach((ite)=>{
-                user.push(ite.val())
-              })
-              setOneUserName(user)
-          })
   //........retrieving data(all usernames) from firebase and adding into new array for display in UI...//
 
           const getProfileNames = database_ref(realDataB,'profile/')
@@ -117,12 +107,33 @@ useEffect(()=>{
               setAllUserPost(tempArray)
             })
             setLoading(false)
-  //......retrieving profile picture..........//
+
+  //......retrieving comment..........//
+
+
+      await get(commentRef).then((snapshot)=>{
+        let temp = []
+        snapshot.forEach((com)=>{
+        
+          let item = []
+        Object.values(com.val()).forEach((ite)=>{
+         item.push(Object.values(ite))
+        })
+          
+          temp.push({
+            postid:com.key,
+            commentedUserId:Object.keys(com.val()).toString(),
+            comment:item
+          })
+          setComments(temp)
+        })
+
+      })
       }else{
        setCurrentUser(null);
       }
   })
-},[allUserPost])
+},[allUserPost,userNames])
 
 // user Image post store in dataBase
 
@@ -155,6 +166,7 @@ const postTextStore = (postText) =>{
   set(post1Ref ,{
       time:new Date(new Date().getTime() + 4*60*60*1000).toLocaleTimeString(),
       userpost:postText,
+      id:uuid()
   })
 }
 // sign In for existing user
@@ -170,7 +182,6 @@ const signup = (email,password,userName) =>{
 
   createUserWithEmailAndPassword(auth,email,password)
   .then((credential)=>{
-    setUid(credential.user.uid)
   const profileRef = database_ref(realDataB,'profile/'+ credential.user.uid);
     set(profileRef,{
       username:userName,
@@ -189,7 +200,14 @@ const messaging = async(message,chatUserId)=>{
     id:currentUser.uid
   })
 }
-
+//........comment section(set comment)....//
+const commentFun = async(comment,postId)=>{
+  const commentRef = database_ref(realDataB,`comment/${postId}/${currentUser.uid}/${uuid()}` );
+  await set(commentRef,{
+    comment:comment,
+    time:new Date(new Date().getTime()).toLocaleTimeString(),
+  })
+}
 
 // context Values
   const value = {
@@ -204,12 +222,12 @@ const messaging = async(message,chatUserId)=>{
     profileImgUrl,
     allUserPost, // tesxt-post of all user
     postImgUrl,
-    oneUserName,
     friends,
-    initialPhoto,
     loading,
     messaging,
-    allChat
+    commentFun,
+    allChat,
+    comments
   }
 
   return (
