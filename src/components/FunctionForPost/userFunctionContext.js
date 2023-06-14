@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword ,onAuthStateChanged,signOut} from 'firebase/auth';
 import { getDownloadURL, uploadBytes,ref as storage_ref } from 'firebase/storage';
-import { get, set,ref as database_ref, onValue } from 'firebase/database';
+import { get, set,ref as database_ref, update } from 'firebase/database';
 import React, { useContext, useState ,useEffect} from 'react'
 import { auth, db, postRef, realDataB, storage } from '../../firebase/firebase';
 import uuid from 'react-uuid';
@@ -15,18 +15,20 @@ export const useAuth = () =>{
 export const UserContext = ({children}) => {
 
 const [postImgUrl,setPostImgUrl] = useState();
-const [userNames,setUserNames] = useState([]);// registered all user name
+const [userData,setuserData] = useState([]);// registered all user name
 const [currentUser,setCurrentUser] = useState([]);// current login user(authentication)
 const [userTextPosts,setUserTextPosts] = useState([]);// one user(current user or you) text post
 const [allUserPost,setAllUserPost] = useState([]);// all user who use these app text post
-const [friends,setFriends] = useState();// username except you
+const [friends,setFriends] = useState();// userinfo except you
 const [profileImgUrl,setProfileImgUrl] = useState('');
-const [profileImgName,setProfileImgName] = useState('')
+const [alluserInfo,setAlluserInfo] = useState()
 const [loading,setLoading] = useState(true); // loading state data is arrive or not from database
 const [allChat,setAllChat] = useState([]);// all user chat 
 const [comments,setComments] = useState()// all user comment
-const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
-// checking user log in or not ]
+
+const [userTypedSms,setUserTypedSms] = useState([]);
+    const [otherSideSms,setOtherSideSms] = useState([]);
+    const [allMessage,setAllMessage] = useState()
 
 useEffect(()=>{
   onAuthStateChanged(auth, async(user)=>{ 
@@ -58,14 +60,18 @@ useEffect(()=>{
             let userNameArray = []
             snapshot.forEach((item)=>{
               userNameArray.push({
-                id:item.key,
-                username:item.val().username
+                id:item?.key,
+                username:item?.val().username,
+                url:item?.val().url,
               })
             })
-             setUserNames(userNameArray); // set username for UI
+            setAlluserInfo(userNameArray); // all user info
+
+            const loginuserDataTemp = userNameArray.filter( item => item.id === user.uid)
+             setuserData(loginuserDataTemp); // set login user info for UI
 
              const tempusers = userNameArray.filter( (item) => item.id !== user.uid);
-             setFriends(tempusers);
+             setFriends(tempusers); // set user info without login user
             })
 
   //.......retrieving data(one user post or log in user post) form firebase and add into new array for display in UI...//
@@ -106,7 +112,6 @@ useEffect(()=>{
               });
               setAllUserPost(tempArray)
             })
-            setLoading(false)
 
   //......retrieving comment..........//
 
@@ -122,18 +127,21 @@ useEffect(()=>{
           
           temp.push({
             postid:com.key,
-            commentedUserId:Object.keys(com.val()).toString(),
-            comment:item
+            commentedUsers:[
+               Object.keys(com.val()).toString(),
+              item]
           })
           setComments(temp)
         })
 
       })
+      setLoading(false)
       }else{
        setCurrentUser(null);
       }
   })
-},[allUserPost,userNames])
+},[allUserPost,userData,profileImgUrl,allMessage,allChat])
+//console.log(comments[0].commentedUsers)
 
 // user Image post store in dataBase
 
@@ -148,16 +156,24 @@ uploadBytes(imgRef,postfile)
   })
 })
 }
+
 //user profile photo store
-  const ProfilePictureStore = (profilePicture) =>{
+
+  const ProfilePictureStore = async(profilePicture) =>{
     const profileImgRef = storage_ref(storage,`profile/${currentUser.uid}/${profilePicture.name}`);
-    setProfileImgName(profilePicture.name)
-    uploadBytes(profileImgRef,profilePicture)
+
+    await uploadBytes(profileImgRef,profilePicture)
     .then((snapshot)=>{
-      console.log(snapshot)
+    
+      let pfRef = storage_ref(storage,snapshot.metadata.fullPath);
+
+        getDownloadURL(pfRef).then((url)=>{
+          let updateRef = database_ref(realDataB,`profile/${currentUser.uid}/`);
+          update(updateRef,{url: url})
+        })
     })
- 
   }
+
 // user posting set on dataBase
 
 const postTextStore = (postText) =>{
@@ -185,6 +201,8 @@ const signup = (email,password,userName) =>{
   const profileRef = database_ref(realDataB,'profile/'+ credential.user.uid);
     set(profileRef,{
       username:userName,
+      userId:credential.user.uid,
+      url:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png'
     });
   })
   .catch((error)=>{
@@ -209,6 +227,36 @@ const commentFun = async(comment,postId)=>{
   })
 }
 
+const chatFunction = (currentUser,chatUser) => {
+  const getUserMessageRef = database_ref(realDataB,`chat/${currentUser.uid}/${chatUser}`);
+  get(getUserMessageRef).then((snapshot)=>{
+   let tempArray = [];
+   
+     snapshot.forEach((message)=>{
+       tempArray.push({
+       id: message.val().id,
+       time: message.val().time,
+       SMS : message.val().userSms
+     }) 
+     })
+     setUserTypedSms(tempArray)
+   }) 
+   const getOtherSideMessageRef = database_ref(realDataB,`chat/${chatUser}/${currentUser.uid}`);
+   get(getOtherSideMessageRef).then((snapshot)=>{
+    let sectempArray = [];
+
+   snapshot.forEach((message)=>{
+       sectempArray.push({
+       id: message.val().id,
+       time: message.val().time,
+       SMS : message.val().userSms
+     }) 
+     })
+      setOtherSideSms(sectempArray)
+    })
+    let finaltemp = userTypedSms.concat(otherSideSms).sort((a, b) => new Date(a.time) - new Date(b.time))
+    setAllMessage(finaltemp)
+}
 // context Values
   const value = {
     fileStore,
@@ -217,9 +265,9 @@ const commentFun = async(comment,postId)=>{
     login,
     signup,
     currentUser, // checking currently user log in or not
-    userNames, // username for display
+    userData, // username for display
     userTextPosts, // text-post data of one user 
-    profileImgUrl,
+    alluserInfo,
     allUserPost, // tesxt-post of all user
     postImgUrl,
     friends,
@@ -227,7 +275,9 @@ const commentFun = async(comment,postId)=>{
     messaging,
     commentFun,
     allChat,
-    comments
+    comments,
+    chatFunction,
+    allMessage
   }
 
   return (

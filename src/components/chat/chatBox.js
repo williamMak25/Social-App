@@ -3,41 +3,84 @@ import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../FunctionForPost/userFunctionContext'
+import { get, ref } from 'firebase/database'
+import { realDataB } from '../../firebase/firebase'
 
 
 export const ChatBox = () => {
-  const {allChat,currentUser,userNames} = useAuth()
-  const [singleChat,setSingleChat] = useState([])
+  const {allChat,currentUser,friends,chatFunction,allMessage} = useAuth()
+  const [userTypedSms,setUserTypedSms] = useState();
+  const [otherSideSms,setOtherSideSms] = useState();
+  const [userMessage,setuserMessage] = useState();
+  const [singleChat,setSingleChat] = useState()
   const [userAllMessage,setUserAllMessage] = useState([])
+  
  useEffect(()=>{
-    
-  setUserAllMessage(allChat?.filter(item => item.id === currentUser.uid));
-  let temp = []
-   userAllMessage.forEach((item)=>{
-    temp.push({
-      id:Object.keys(item.chat).toString(),
-      message:Object.values(item.chat)
-    })
-    setSingleChat(temp)
-  })
+  let findMess = [];
+  const temp = allChat?.find( item => item?.id === currentUser?.uid)
+  findMess.push(temp);
+ 
+  if (findMess[0]?.chat) {
+   const sectemp = Object.entries(findMess[0].chat).map(([id, message]) => {
+      return{ id: id, message: message };
+    });
+    setSingleChat(sectemp)
+  }
+  
  },[allChat])
+console.log()
   return (
     <>
-    <div className='absolute left-10 bottom-10 w-76 overflow-auto z-10 p-2 bg-zinc-900 h-1/2 rounded shadow'>
-      <h4 className='text-cyan-400 bg-dark p-2 rounded my-0 dotted text-center w-full mb-2'>Chat History</h4>
-       {singleChat && singleChat?.map((item)=>{
+    <div className='h-[390px] p-2 bg-dark max-[414px]:h-screen min-[415px]:rounded min-[415px]:mx-4 max-[414px]:w-full max-[414px]:mx-0'>
+      <NavLink to='/' className='min-[415px]:hidden'><i class="bi bi-arrow-up-left-circle-fill text-white"></i></NavLink>
+      <h4 className='text-cyan-400 p-2 rounded my-0 dotted text-center mb-2 text-xl'>Chat History</h4>
+        {singleChat && singleChat?.map((item)=>{
+       {/**let lastIndex = Object.values(item.message[0]).length - 1;*/}
         return(
-        <div className='justify-between rounded text-white py-2 flex flex-row bg-dark'>
-                
-                <div className='ml-2 flex flex-row items-center mx-2'>
-                  <img src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png'
-                      className='w-10 h-10 rounded-circle mr-2'/>
-                      <small>{userNames?.find( name => name.id === item.id).username}</small>
-                </div>
-                <NavLink to={`/chatbox/${item.id}`}><button className='m-2 text-cyan-400 mx-2 px-3'>Message</button></NavLink>
+        <div className='flex flex-row justify-between items-center rounded text-white p-2 '>
+          <div className='flex flex-row items-center'>
+            <img src={friends?.find( name => name?.id === item.id)?.url} className='w-10 h-10 rounded-full'/>     
+            <small className='mx-2 text-cyan-400'>{friends?.find( name => name?.id === item.id)?.username}</small>
+               
+          </div>
+          <NavLink to={`/chatbox/${item.id}`}><button className='m-2 text-cyan-400 mx-2 px-3'>Message</button></NavLink>
         </div>)
+        
        })}
     </div>
     </>
   )
 }
+
+/*const getUserMessageRef = ref(realDataB,`chat/${currentUser.uid}/${allChat}`);
+  get(getUserMessageRef).then((snapshot)=>{
+   let tempArray = [];
+   
+     snapshot.forEach((message)=>{
+       tempArray.push({
+       id: message.val().id,
+       time: message.val().time,
+       SMS : message.val().userSms
+     }) 
+     })
+     setUserTypedSms(tempArray)
+   }) 
+   const getOtherSideMessageRef = ref(realDataB,`chat/${}/${currentUser.uid}`);
+   get(getOtherSideMessageRef).then((snapshot)=>{
+    let sectempArray = [];
+
+   snapshot.forEach((message)=>{
+       sectempArray.push({
+       id: message.val().id,
+       time: message.val().time,
+       SMS : message.val().userSms
+     }) 
+     })
+      setOtherSideSms(sectempArray)
+    })
+    let finaltemp = userTypedSms.concat(otherSideSms).sort((a, b) => new Date(a.time) - new Date(b.time))
+    setAllMessage(finaltemp)
+
+   
+     */
+    

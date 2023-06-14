@@ -1,16 +1,14 @@
 import { signOut } from 'firebase/auth'
-import React, {useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { auth} from '../../firebase/firebase'
 import { useAuth } from '../FunctionForPost/userFunctionContext'
-import background from '../profileBg.png'
+
+
 export const Profile = () => {
-    const {currentUser,userNames,ProfilePictureStore,profileImgUrl,userTextPosts} = useAuth();
+    const {currentUser,userData,ProfilePictureStore,userTextPosts} = useAuth();
     const [toggleBox,setToggleBox] = useState('hidden')
     const [profilePicture,setProfilePicture] = useState()
-    const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
-    
-
     // for log out user account
 
     const handleSignOut = ()=>{
@@ -20,7 +18,7 @@ export const Profile = () => {
 
     const handleClick = () =>{
       ProfilePictureStore(profilePicture);
-      setToggleBox('hidden');
+      setToggleBox('hidden'); 
       
     }
 //...... toggeling the change profile-picture box.......//
@@ -34,16 +32,16 @@ export const Profile = () => {
 
   return (
   <div className='bg-dark text-white h-screen '>
-    <div className="flex flex-column justify-center items-center w-full h-screen max-[395px]:p-0 p-3">
+    <div className="flex flex-column justify-center items-center w-full h-screen max-[414px]:p-0 p-3">
       
-      <div className='min-[395px]:flex flex-column items-center mx-5 px-3 max-[395px]:flex flex-row m-0 p-0'>
-        <img src={profileImgUrl ? profileImgUrl : initialPhoto}
+      <div className='min-[414px]:flex flex-column items-center mx-5 px-3 max-[414px]:flex flex-row m-0 p-0'>
+        <img src={userData[0]?.url}
              alt='profilePicture'
-             className='max-[395px]:w-16 h-16 rounded-circle'
+             className='max-[414px]:w-16 h-16 rounded-circle'
              />
         <div className='m-1'>
-            <h3 className='text-center'>{userNames?.find(name => name.id === currentUser.uid).username}</h3>
-            <p className='opacity-50 text-center'>{currentUser.email}</p> 
+            <h3 className='text-center'>{userData[0]?.username}</h3>
+            <p className='opacity-50 text-center'>{currentUser?.email}</p> 
         </div>
       </div>
 
@@ -56,11 +54,11 @@ export const Profile = () => {
       </div>
         
       <div className={toggleBox}>
-        <div className='bg-gray-600 rounded shadow shadow-inner shadow-zinc-400 absolute inset-x-40 p-5 inset-y-40 max-[395px]:abosolute left-0 right-0 inset-y-40 z-10'>
+        <div className='bg-gray-600 rounded shadow shadow-inner shadow-zinc-400 absolute inset-x-40 p-5 inset-y-40 max-[414px]:abosolute left-0 right-0 inset-y-40 z-10'>
 
             <h4 className='text-center text-cyan-400'>Select Photo from Your Device</h4>
             <hr/>
-            <div className='mx-5 my-5 max-[395px]:mx-2 my-2'>
+            <div className='mx-5 my-5 max-[414px]:mx-2 my-2'>
               <input type='file' accept='image/*'
                    className='m-5 px-3 block w-full text-sm text-slate-500
                    file:mr-3 file:py-2 file:px-5
@@ -81,23 +79,20 @@ export const Profile = () => {
         </div>
       </div>
 
-      <div className='warp overflow-auto h-screen w-full flex flex-column items-center'>
+      <div className='warp overflow-auto h-screen min-[415px]:w-[500px] flex flex-column items-center max-[414px]:w-full'>
           {userTextPosts.map((post)=>{
             return (
-              <div  className='min-[395px]: flex flex-column justify-start items-center my-1 rounded border bg-dark
-                                max-[395px]:p-0 w-80' key={post.data.time}>
+              <div  className=' flex flex-column justify-start items-center my-1 rounded border bg-dark p-2
+              max-[414px]:p-0 w-full' key={post.data.time}>
 
                 <div className='border-dark rounded w-full'>
                   <div className='flex items-center justify-start'>
                       
-                      <img src={profileImgUrl ? profileImgUrl : initialPhoto}
-                        className="img-fluid m-2"
-                        style={{width: '40px',
-                                height: '40px',
-                                borderRadius: '50%'}}
+                      <img src={userData[0]?.url}
+                        className=" m-2 w-[30px] h-[30px] rounded-full"
                         alt='profileImg'/>
                     <div>
-                        <h5 className='text-start m-0'>{userNames?.find(name => name.id === currentUser.uid).username}</h5>
+                        <h5 className='text-start m-0'>{userData[0]?.username}</h5>
                         <small className='m-0 p-0 text-sm opacity-50'>{post.data.time}</small>
                     </div>
                   </div>
@@ -105,7 +100,7 @@ export const Profile = () => {
                   <div className='w-full '>
                             {/*<img src={postImgUrl}
                           className='img-fluid m-2' alt='postImg'/>*/}
-                            <p className='p-2 mx-3'>{post.data.userpost}</p>
+                            <p className='p-2 mx-3'>{post?.data.userpost}</p>
                   </div>
                         <hr className='m-1'/>
                   <div>

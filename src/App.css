@@ -1,12 +1,21 @@
 .App{
   text-align: center;
+  font-family: serif;
 }
 body{
   background-color: black;
   color:white;
   margin: 0;
+  padding: 0;
+  font-family: serif;
+}
+*{
   font-family: serif;
 }
 .warp::-webkit-scrollbar {
   display: none;
+}
+#root{
+  margin: 0;
+  padding: 0;
 }
