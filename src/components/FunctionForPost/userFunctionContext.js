@@ -20,13 +20,13 @@ const [currentUser,setCurrentUser] = useState([]);// current login user(authenti
 const [userTextPosts,setUserTextPosts] = useState([]);// one user(current user or you) text post
 const [allUserPost,setAllUserPost] = useState([]);// all user who use these app text post
 const [friends,setFriends] = useState();// userinfo except you
-const [profileImgUrl,setProfileImgUrl] = useState('');
+const [chatuserState,setChatuserState] = useState('');
 const [alluserInfo,setAlluserInfo] = useState()
 const [loading,setLoading] = useState(true); // loading state data is arrive or not from database
 const [allChat,setAllChat] = useState([]);// all user chat 
 const [comments,setComments] = useState()// all user comment
 
-const [userTypedSms,setUserTypedSms] = useState([]);
+    const [userTypedSms,setUserTypedSms] = useState([]);
     const [otherSideSms,setOtherSideSms] = useState([]);
     const [allMessage,setAllMessage] = useState()
 
@@ -135,12 +135,14 @@ useEffect(()=>{
         })
 
       })
+      
       setLoading(false)
+      
       }else{
        setCurrentUser(null);
       }
   })
-},[allUserPost,userData,profileImgUrl,allMessage,allChat])
+},[allUserPost,userData,allMessage])
 //console.log(comments[0].commentedUsers)
 
 // user Image post store in dataBase
@@ -220,43 +222,50 @@ const messaging = async(message,chatUserId)=>{
 }
 //........comment section(set comment)....//
 const commentFun = async(comment,postId)=>{
-  const commentRef = database_ref(realDataB,`comment/${postId}/${currentUser.uid}/${uuid()}` );
+  const commentRef = database_ref(realDataB,`comment/${postId}/${currentUser?.uid}/${uuid()}` );
   await set(commentRef,{
     comment:comment,
     time:new Date(new Date().getTime()).toLocaleTimeString(),
   })
 }
 
-const chatFunction = (currentUser,chatUser) => {
-  const getUserMessageRef = database_ref(realDataB,`chat/${currentUser.uid}/${chatUser}`);
-  get(getUserMessageRef).then((snapshot)=>{
-   let tempArray = [];
-   
-     snapshot.forEach((message)=>{
-       tempArray.push({
-       id: message.val().id,
-       time: message.val().time,
-       SMS : message.val().userSms
-     }) 
-     })
-     setUserTypedSms(tempArray)
-   }) 
-   const getOtherSideMessageRef = database_ref(realDataB,`chat/${chatUser}/${currentUser.uid}`);
-   get(getOtherSideMessageRef).then((snapshot)=>{
-    let sectempArray = [];
 
-   snapshot.forEach((message)=>{
-       sectempArray.push({
-       id: message.val().id,
-       time: message.val().time,
-       SMS : message.val().userSms
-     }) 
-     })
-      setOtherSideSms(sectempArray)
+const chatFunction = (currentUser, chatUser) => {
+  let getUserMessageRef = database_ref(realDataB, `chat/${currentUser?.uid}/${chatUser}`);
+  let getOtherSideMessageRef = database_ref(realDataB, `chat/${chatUser}/${currentUser?.uid}`);
+
+  Promise.all([get(getUserMessageRef), get(getOtherSideMessageRef)])
+    .then(([userSnapshot, otherSideSnapshot]) => {
+      let tempArray = [];
+      userSnapshot.forEach((message) => {
+        tempArray.push({
+          id: message.val().id,
+          time: message.val().time,
+          SMS: message.val().userSms,
+        });
+      });
+
+      setUserTypedSms(tempArray);
+
+      let sectempArray = [];
+      otherSideSnapshot.forEach((message) => {
+        sectempArray.push({
+          id: message.val().id,
+          time: message.val().time,
+          SMS: message.val().userSms,
+        });
+      });
+
+      setOtherSideSms(sectempArray);
+
+      let finaltemp = userTypedSms.concat(otherSideSms).sort((a, b) => new Date(a.time) - new Date(b.time));
+      setAllMessage(finaltemp);
     })
-    let finaltemp = userTypedSms.concat(otherSideSms).sort((a, b) => new Date(a.time) - new Date(b.time))
-    setAllMessage(finaltemp)
-}
+    .catch((error) => {
+      // Handle any errors that occurred during fetching data
+    });
+};
+
 // context Values
   const value = {
     fileStore,

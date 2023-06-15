@@ -13,7 +13,7 @@ export const SideBar = () => {
 
     return (
       <>
-   {!loading ? <div class="absolute right-5 top-10 flex flex-column items-center rounded-b bg-dark shadow shadow-zinc-300 text-white py-4 m-2 mt-2 w-1/4 max-[414px]:hidden">
+   {currentUser ? <div class="absolute right-5 top-10 flex flex-column items-center rounded-b bg-dark shadow shadow-zinc-300 text-white py-4 m-2 mt-2 w-1/4 max-[414px]:hidden">
   
         <img src={userData[0]?.url}
              alt='profilePicture'

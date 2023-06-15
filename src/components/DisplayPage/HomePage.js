@@ -54,7 +54,7 @@ export const HomePage = () => {
     <div className=' overflow-auto warp w-1/2 max-[414px]:w-full h-screen'>
 
 {/*.....................All user post or newfeed container.......................*/}
-      {loading ? <LoadingPage/> :    
+      {!allUserPost ? <LoadingPage/> :    
         allUserPost.map((ite)=>{  
         return ite.post?.map((it)=>{
         return ( 

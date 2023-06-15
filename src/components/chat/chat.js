@@ -9,18 +9,24 @@ import './chat.css'
 import { LoadingPage } from '../loading/loading';
 
 export const Chat = () => {
-    const {messaging,currentUser,friends,chatFunction,allMessage} = useAuth();
+    const {messaging,currentUser,friends,chatFunction,allMessage} = useAuth(); 
     const {chatUser} = useParams();
     const [message,setMessage] = useState([]);
+    const [windowWidth,setWindowWidth] = useState([])
     useEffect(()=>{
-        chatFunction(currentUser,chatUser)
-    },[]);
+      chatFunction(currentUser,chatUser)
+      let width = window.screen.width;
+      setWindowWidth(width)
+    },[currentUser,chatUser,allMessage]);
+    console.log(windowWidth)
+
 
     const handleMessage = ()=>{
-        messaging(message,chatUser);
+        messaging(message,chatUser);     
         setMessage('')
       }
-      console.log(allMessage)
+
+
   return (
     <>
    {allMessage ?
@@ -32,7 +38,7 @@ export const Chat = () => {
                className='w-10 h-10 rounded-circle mx-2'/>
             <h4 className='pt-2 px-2 text-center text-white'>{friends?.find( name => name.id === chatUser)?.username}</h4>
           </div>
-          <NavLink to='/' className='text-4xl text-end '><i className="bi bi-x text-white"></i></NavLink> 
+          <NavLink to={windowWidth <= 414 ? '/chatbox' : '/'} className='text-4xl text-end '><i className="bi bi-x text-white"></i></NavLink> 
         </div>
 
         {(Object.keys(allMessage)?.length === 0)  ? 
@@ -42,8 +48,9 @@ export const Chat = () => {
           <p>Let's start now</p>
         </div> : 
 
-        <div className='w-full messages-container flex flex-column overflow-y-auto w-80 bg-white'> 
-              {allMessage && allMessage?.map((message, index) => (
+        <div className='w-full messages-container flex flex-column overflow-y-auto w-80 bg-white'>
+   
+              {allMessage?.map((message, index) => (
                 <div key={index} className={message?.id === currentUser.uid ? 'message user' : 'message sender'}>
                     <div className='text-sm text-lg'>{message?.SMS}</div>
                     <div className='text-sm opacity-70'>{new Date(message?.time).toLocaleTimeString()}</div>
