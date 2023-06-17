@@ -14,13 +14,13 @@ export const useAuth = () =>{
 
 export const UserContext = ({children}) => {
 
-const [postImgUrl,setPostImgUrl] = useState();
+
 const [userData,setuserData] = useState([]);// registered all user name
 const [currentUser,setCurrentUser] = useState([]);// current login user(authentication)
 const [userTextPosts,setUserTextPosts] = useState([]);// one user(current user or you) text post
 const [allUserPost,setAllUserPost] = useState([]);// all user who use these app text post
 const [friends,setFriends] = useState();// userinfo except you
-const [chatuserState,setChatuserState] = useState('');
+
 const [alluserInfo,setAlluserInfo] = useState()
 const [loading,setLoading] = useState(true); // loading state data is arrive or not from database
 const [allChat,setAllChat] = useState([]);// all user chat 
@@ -35,11 +35,12 @@ useEffect(()=>{
       if(user){
           setCurrentUser(user)// set user email to show on UI
     
-          const profileRef = database_ref(realDataB,`profile/${user.uid}`);
+
           const postRef = database_ref(realDataB,`post/${user.uid}`);
           const allpostRef = database_ref(realDataB,'post/');
           const chatRef = database_ref(realDataB,'chat/');
           const commentRef = database_ref(realDataB,'comment/')
+          const PimgRef = database_ref(realDataB,'ImgPost/') 
 
   //.......retrieving all chats from database......//
         get(chatRef).then((snapshot)=>{
@@ -52,7 +53,7 @@ useEffect(()=>{
           })
           setAllChat(temp)
         })
-  //........retrieving data(all usernames) from firebase and adding into new array for display in UI...//
+  //........retrieving data(all userdata) from firebase and adding into new array for display in UI...//
 
           const getProfileNames = database_ref(realDataB,'profile/')
 
@@ -68,7 +69,7 @@ useEffect(()=>{
             setAlluserInfo(userNameArray); // all user info
 
             const loginuserDataTemp = userNameArray.filter( item => item.id === user.uid)
-             setuserData(loginuserDataTemp); // set login user info for UI
+             setuserData(loginuserDataTemp); // set login user info 
 
              const tempusers = userNameArray.filter( (item) => item.id !== user.uid);
              setFriends(tempusers); // set user info without login user
@@ -86,8 +87,9 @@ useEffect(()=>{
               })
               setUserTextPosts(userPostArray);
             })
+  //------------retrieving user img post from firebase
 
-  //.......retrieving data(all user post) from firebase........//
+  //.......retrieving data(all user post from firebase........//
 
  
         await get(allpostRef).then((posts)=>{
@@ -143,20 +145,12 @@ useEffect(()=>{
       }
   })
 },[allUserPost,userData,allMessage])
-//console.log(comments[0].commentedUsers)
+
 
 // user Image post store in dataBase
 
 const fileStore = (postfile)=>{
-const imgRef = storage_ref(storage,`image/${currentUser.uid}/${postfile.name}`);
-uploadBytes(imgRef,postfile)
-.then((items)=>{
-  getDownloadURL(imgRef)
-  .then((url)=>{
-    console.log(url)
-    setPostImgUrl(url);  // Img url for display image on UI
-  })
-})
+
 }
 
 //user profile photo store
@@ -178,14 +172,26 @@ uploadBytes(imgRef,postfile)
 
 // user posting set on dataBase
 
-const postTextStore = (postText) =>{
-   const post1Ref = database_ref(realDataB,`post/${currentUser.uid}/${uuid()}`);
+const postTextStore = (postText,postfile) =>{
+   
+   const imgRef = storage_ref(storage,`image/${currentUser.uid}/${postfile.name}`);
+    uploadBytes(imgRef,postfile)
+    .then((snapshot)=>{
 
-  set(post1Ref ,{
-      time:new Date(new Date().getTime() + 4*60*60*1000).toLocaleTimeString(),
-      userpost:postText,
-      id:uuid()
+    let postImgRef = storage_ref(storage,snapshot.metadata.fullPath)
+
+    getDownloadURL(postImgRef).then((url)=>{
+      const post1Ref = database_ref(realDataB,`post/${currentUser.uid}/${uuid()}`);
+
+      set(post1Ref,{
+        time:new Date(new Date().getTime()).toLocaleTimeString(),
+        userpost:postText,
+        id:uuid(),
+        userImgPost: url
+      })
   })
+})
+
 }
 // sign In for existing user
 const login = (email,password)=>{
@@ -277,8 +283,7 @@ const chatFunction = (currentUser, chatUser) => {
     userData, // username for display
     userTextPosts, // text-post data of one user 
     alluserInfo,
-    allUserPost, // tesxt-post of all user
-    postImgUrl,
+    allUserPost, // all users post
     friends,
     loading,
     messaging,

@@ -12,12 +12,11 @@ import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 export const HomePage = () => {
-  const {profileImgUrl,userData,allUserPost,alluserInfo,loading,commentFun,comments} = useAuth();
+  const {userData,allUserPost,alluserInfo,loading,commentFun,comments} = useAuth();
   const [show,setShow] = useState(false);
   const [commentBox,setCommentBox] = useState(null);
   const [like,setLike] = useState(false)
   const [comment,setComment] = useState('')
-  const initialPhoto = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png';
 
   const handleComment = (postId,e)=>{
     
@@ -34,24 +33,23 @@ export const HomePage = () => {
       setCommentBox(id)
     }
   }
+
   return (
     <>
     <Header/>
-  <div className='overflow-hidden h-screen bg-zinc-900 flex flex-row items-start max-[414px]:py-0'>
+    <div className='sm:hidden bg-blue-300 p-0'>
+      <Post/>
+    </div>
+    
+  <div className='overflow-hidden xl:h-full max-xl:h-screen bg-zinc-900 flex flex-row items-start max-[414px]:py-0'>
 
 {/*..................create post bar Section from post Component.......................*/}
-    <div className='max-[414px]:hidden'>
+    <div className='max-sm:hidden h-full'>
       <Post/>
       <ChatBox/>
     </div> 
-      
-        
-        {/*<button className='w-14 h-14 rounded-circle bg-cyan-800 absolute left-5 bottom-5 z-20 text-lg text-white max-[395px]:absolute '>
-        {show ? <i className="bi bi-envelope-open "onClick={()=>setShow(false)}></i> :
-         <i className="bi bi-envelope" onClick={()=>setShow(true)}></i>}</button>
-  {show ? : null}*/}
 
-    <div className=' overflow-auto warp w-1/2 max-[414px]:w-full h-screen'>
+    <div className=' overflow-auto warp w-1/2 max-sm:w-full h-screen 2xl:h-[620px]'>
 
 {/*.....................All user post or newfeed container.......................*/}
       {!allUserPost ? <LoadingPage/> :    
@@ -75,11 +73,12 @@ export const HomePage = () => {
                 </div>
 
             </div>
-
+            <p className='m-2'>{it.userpost}</p>
             <div className='p-2'>
-              {/*<img src={postImgUrl}
-                  className='img-fluid m-2' alt='postImg'/>*/}
-                <p className='m-2'>{it.userpost}</p>
+              {it.userImgPost ? 
+              <img src={it.userImgPost}
+                  className='img-fluid ' alt='postImg'/> : null }
+                
             </div>    
 
             <hr className='w-100 mb-1'/>

@@ -24,8 +24,8 @@ export const Header = () => {
   }
   return (
     <>
-      <div className='min-[415px]:hidden sticky top-0 z-[1] '>
-        <nav className='bg-dark h-12 border-b flex flex-row justify-between items-center pt-2 m-0 '>
+      <div className='sm:hidden sticky top-0 z-[1] '>
+        <nav className='bg-dark h-12 flex flex-row justify-between items-center pt-2 m-0 '>
           <NavLink to='/' className='ml-3 text-white no-underline font-serif'><h2>ConNet</h2></NavLink>
           <div className='flex flex-row items-center mx-3 mt-2'>
             <NavLink to='/chatbox'><h4 className='mx-2'><i class="bi bi-chat text-white "></i></h4></NavLink>
@@ -77,7 +77,7 @@ export const Header = () => {
         </div>
       </div>
 {/*-------------------------desktop view-------------------- */}
-<div className='sticky top-0 z-[30] h-12 shadow bg-dark overflow-a flex items-center justify-between warp max-[414px]:hidden'>
+<div className='sticky top-0 z-[30] h-12 shadow bg-dark overflow-a flex items-center justify-between warp max-sm:hidden'>
 
       <NavLink to='/' className='ml-3 text-white no-underline font-serif text-md'>ConNet</NavLink>
       <input type='text' className='w-1/2 outline-none'/>
